@@ -1,0 +1,43 @@
+{
+    "name": "litstack/meta",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jannescb",
+            "email": "jannes@aw-studio.de"
+        }
+    ],
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "autoload": {
+        "psr-4": {
+            "Litstack\\Meta\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "litstack/litstack": "^3.0"
+    },
+    "require-dev": {
+        "litstack/rehearsal": "^1.0.1",
+        "phpunit/phpunit": "^9.4",
+        "mockery/mockery": "^1.4"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Litstack\\Meta\\MetaServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
