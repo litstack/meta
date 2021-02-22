@@ -2,11 +2,11 @@
 
 namespace Litstack\Meta\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Ignite\Crud\Models\Traits\Translatable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Ignite\Crud\Models\Traits\HasMedia;
+use Ignite\Crud\Models\Traits\Translatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\MediaLibrary\HasMedia as HasMediaContract;
 
 class Meta extends Model implements TranslatableContract, HasMediaContract
@@ -18,6 +18,8 @@ class Meta extends Model implements TranslatableContract, HasMediaContract
     protected $translationModel = 'Litstack\Meta\Models\Translations\MetaTranslation';
 
     protected $fillable = [
+        'model_type',
+        'model_id',
         'title',
         'description',
         'keywords',
