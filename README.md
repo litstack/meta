@@ -32,7 +32,7 @@ class Post extends Model
 
 > Forms don't need further setup
 
-In order to display the form in litstack, edit your model-config:
+In order to display the form in litstack edit your model-config:
 
 ```php
 use Litstack\Meta\Traits\CrudHasMeta;
@@ -53,9 +53,22 @@ class PostConfig extends CrudConfig
 To display the meta-fields in your template, simply use the `<x-lit-meta />` component and pass it the `metaFields` of your model.
 
 ```php
+@extends('app')
+
 @section('meta')
     <x-lit-meta :meta="$post->metaFields()" />
 @endsection
+```
+
+And in your main template:
+
+```php
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @yield('meta')
+</head>
 ```
 
 ## Default Values / Customizing / Overriding
