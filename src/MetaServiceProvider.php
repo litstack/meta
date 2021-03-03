@@ -2,18 +2,20 @@
 
 namespace Litstack\Meta;
 
+use Ignite\Support\Facades\Form;
+use Ignite\Support\Facades\Lit;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class MetaServiceProvider extends ServiceProvider
 {
     /**
-    * Blade x components.
-    *
-    * @var array
-    */
+     * Blade x components.
+     *
+     * @var array
+     */
     protected $components = [
-        'lit-meta'        => Components\MetaComponent::class,
+        'lit-meta' => Components\MetaComponent::class,
     ];
 
     /**
@@ -24,6 +26,9 @@ class MetaServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerBladeComponents();
+
+        Form::field('map', MetaField::class);
+        Lit::script(__DIR__.'/../dist/index.js');
     }
 
     /**
@@ -38,7 +43,7 @@ class MetaServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/lit-meta.php' => config_path('lit-meta.php'),
         ], 'config');
-        
+
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         if (! class_exists('CreateMetaTable')) {

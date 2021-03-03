@@ -2,7 +2,6 @@
 
 namespace Litstack\Meta\Traits;
 
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Litstack\Meta\Models\Meta;
 
@@ -13,15 +12,13 @@ trait HasMeta
         return $this->morphOne(Meta::class, 'model');
     }
 
-    public function metaTags()
+    public function metaFields(): array
     {
         return [
-            'title' => $this->metaTitle()
+            'title'       => $this->meta->title,
+            'description' => $this->meta->tescription,
+            'keywords'    => $this->meta->teywords,
+            'image'       => $this->meta->image,
         ];
-    }
-
-    public function metaTitle()
-    {
-        return $this->meta->first()->title;
     }
 }
