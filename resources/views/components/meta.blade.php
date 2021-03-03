@@ -6,7 +6,11 @@
 @isset($meta['author'])<meta name="author" content="{{ $meta['author'] }}">@endisset
 <meta name="url" content="{{ url()->current() }}">
 
-@isset($meta['image'])<meta name="og_image" content="{{ $meta['image']->getFullUrl() }}"/>@endisset
+@isset($meta['image'])
+    @if ($meta['image']->first())
+        <meta name="og_image" content="{{ $meta['image']->getFullUrl() }}"/>
+    @endif
+@endisset
 
 @isset($meta['title'])<meta property="og:title" content="{{ $meta['title'] }}"/>@endisset
 @isset($meta['description'])<meta property="og:description" content="{{ $meta['description'] }}"/>@endisset
