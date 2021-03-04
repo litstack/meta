@@ -19,12 +19,13 @@ php artisan migrate
 
 ## Usage
 
-Start by perparing your Crud-Model by using the `HasMeta` Trait:
+Start by perparing your Crud-Model by using the `HasMeta` Trait and implement the `metaable` Contract:
 
 ```php
+use Litstack\Meta\Metaable;
 use Litstack\Meta\Traits\HasMeta;
 
-class Post extends Model
+class Post extends Model implements Metaable
 {
     use HasMeta;
 }
@@ -50,13 +51,22 @@ class PostConfig extends CrudConfig
 }
 ```
 
+You may disable certain fields in the meta modal:
+
+```php
+$this->meta($page, disable: [
+    'description',
+    'keywords'
+]);
+```
+
 To display the meta-fields in your template, simply use the `<x-lit-meta />` component and pass it the `metaFields` of your model.
 
 ```php
 @extends('app')
 
 @section('meta')
-    <x-lit-meta :meta="$post->metaFields()" />
+    <x-lit-meta :for="$post" />
 @endsection
 ```
 
@@ -73,21 +83,45 @@ And in your main template:
 
 ## Default Values / Customizing / Overriding
 
-You can set default values or customize and override them by providing a `metaFields()` method in your model:
+If you want to use meta attributes directly from model attributes you can specify them in `metaAttributes` in your config. You may as well override the meta methods like `metaAuthor` to return dynamic meta attributes:
 
 ```php
-/**
- * Return the meta fields for this model.
- *
- * @return array
- */
-public function metaFields(): array
+class Post extends Model implements Metaable
 {
-    return [
-        'title'       => 'Awesome Blog: ' . $this->meta->title,
-        'description' => $this->meta->tescription ?: 'Default description',
-        'keywords'    => $this->meta->teywords ?: 'Default Keywords',
-        'image'       => $this->image, // image will be set as og image
+    use HasMeta;
+
+    protected $metaAttributes = [
+        'author' => 'author.name',
+        'image'  => 'header_image',
     ];
+
+    public function getHeaderImageAttribute()
+    {
+        // ...
+    }
+
+    public function metaTitle(): ?string
+    {
+        // Return a prefix:
+        return "Awesome Blog: " . parent::metaTitle();
+    }
+}
+```
+
+You may set default attributes by setting `defaultMetaAttributes` or add a method `defaultMeta...` method:
+
+```php
+class Post extends Model implements Metaable
+{
+    use HasMeta;
+
+    protected $defaultMetaAttribute = [
+        'description' => 'description',
+    ];
+
+    public function defaultMetaTitle()
+    {
+
+    }
 }
 ```
