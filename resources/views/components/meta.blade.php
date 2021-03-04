@@ -1,18 +1,20 @@
-@isset($meta['title'])<meta name="title" content="{{ $meta['title'] }}"/>@endisset
-@isset($meta['keywords'])<meta name="keywords" content="{{ $meta['keywords'] }}"/>@endisset
-@isset($meta['description'])<meta name="description" content="{{ $meta['description'] }}"/>@endisset
+@isset($title)
+    <meta name="title" content="{{ $title }}"/>
+@endisset
+@isset($keywords)<meta name="keywords" content="{{ $keywords }}"/>@endisset
+@isset($description)<meta name="description" content="{{ $description }}"/>@endisset
 <meta name="robots" content="index,follow"/> 
 <meta name="revisit-after" content="7 days">
-@isset($meta['author'])<meta name="author" content="{{ $meta['author'] }}">@endisset
+@isset($author)<meta name="author" content="{{ $author }}">@endisset
 <meta name="url" content="{{ url()->current() }}">
 
-@isset($meta['image'])
-    @if ($meta['image']->first())
-        <meta name="og_image" content="{{ $meta['image']->getFullUrl() }}"/>
+@isset($image)
+    @if ($image->first())
+        <meta name="og:image" content="{{ $image->getFullUrl() }}"/>
     @endif
 @endisset
 
-@isset($meta['title'])<meta property="og:title" content="{{ $meta['title'] }}"/>@endisset
-@isset($meta['description'])<meta property="og:description" content="{{ $meta['description'] }}"/>@endisset
+@isset($title)<meta property="og:title" content="{{ $title }}"/>@endisset
+@isset($description)<meta property="og:description" content="{{ $description }}"/>@endisset
 <meta property="og:locale" content="{{ app()->getLocale() }}" />
 <meta property="og:url" content="{{ url()->current() }}"/>

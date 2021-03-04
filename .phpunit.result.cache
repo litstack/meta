@@ -1,0 +1,1 @@
+C:37:"PHPUnit\Runner\DefaultTestResultCache":166:{a:2:{s:7:"defects";a:1:{s:47:"Tests\HasMetaTest::test_getMetaAttribute_method";i:4;}s:5:"times";a:1:{s:47:"Tests\HasMetaTest::test_getMetaAttribute_method";d:0.003;}}}

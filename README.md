@@ -56,7 +56,7 @@ To display the meta-fields in your template, simply use the `<x-lit-meta />` com
 @extends('app')
 
 @section('meta')
-    <x-lit-meta :meta="$post->metaFields()" />
+    <x-lit-meta :for="$post" />
 @endsection
 ```
 
@@ -73,21 +73,45 @@ And in your main template:
 
 ## Default Values / Customizing / Overriding
 
-You can set default values or customize and override them by providing a `metaFields()` method in your model:
+If you want to use meta attributes directly from model attributes you can specify them in `metaAttributes` in your config. You may as well override the meta methods like `metaAuthor` to return dynamic meta attributes:
 
 ```php
-/**
- * Return the meta fields for this model.
- *
- * @return array
- */
-public function metaFields(): array
+class Post extends Model implements Metaable
 {
-    return [
-        'title'       => 'Awesome Blog: ' . $this->meta->title,
-        'description' => $this->meta->tescription ?: 'Default description',
-        'keywords'    => $this->meta->teywords ?: 'Default Keywords',
-        'image'       => $this->image, // image will be set as og image
+    use HasMeta;
+
+    protected $metaAttributes = [
+        'author' => 'author.name',
+        'image'  => 'header_image',
     ];
+
+    public function getHeaderImageAttribute()
+    {
+        // ...
+    }
+
+    public function metaTitle(): ?string
+    {
+        // Return a prefix:
+        return "Awesome Blog: " . parent::metaTitle();
+    }
+}
+```
+
+You may set default attributes by setting `defaultMetaAttributes` or add a method `defaultMeta...` method:
+
+```php
+class Post extends Model implements Metaable
+{
+    use HasMeta;
+
+    protected $defaultMetaAttribute = [
+        'description' => 'description',
+    ];
+
+    public function defaultMetaTitle()
+    {
+
+    }
 }
 ```
