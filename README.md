@@ -19,12 +19,13 @@ php artisan migrate
 
 ## Usage
 
-Start by perparing your Crud-Model by using the `HasMeta` Trait:
+Start by perparing your Crud-Model by using the `HasMeta` Trait and implement the `metaable` Contract:
 
 ```php
+use Litstack\Meta\Metaable;
 use Litstack\Meta\Traits\HasMeta;
 
-class Post extends Model
+class Post extends Model implements Metaable
 {
     use HasMeta;
 }
@@ -48,6 +49,15 @@ class PostConfig extends CrudConfig
         $this->meta($page);
     }
 }
+```
+
+You may disable certain fields in the meta modal:
+
+```php
+$this->meta($page, disable: [
+    'description',
+    'keywords'
+]);
 ```
 
 To display the meta-fields in your template, simply use the `<x-lit-meta />` component and pass it the `metaFields` of your model.
