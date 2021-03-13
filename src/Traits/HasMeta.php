@@ -5,6 +5,7 @@ namespace Litstack\Meta\Traits;
 use Closure;
 use Ignite\Crud\Models\Media;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Str;
 use Litstack\Meta\Models\Meta;
 
 trait HasMeta
@@ -78,15 +79,43 @@ trait HasMeta
     public function getMetaAttribute($attribute)
     {
         return $this->getValueOrDefault(function () use ($attribute) {
-            if (property_exists($this, 'metaAttributes') &&
-            array_key_exists($attribute, $this->metaAttributes)) {
-                return $this->getAttribute(
-                $this->metaAttributes[$attribute]
-            );
+            if (property_exists($this, 'metaAttributes')
+                && array_key_exists($attribute, $this->metaAttributes)) {
+                return $this->getDottedAttribute($this->metaAttributes[$attribute]);
             }
 
-            return $this->meta?->{$attribute};
+            if (! $this->relationLoaded('meta')) {
+                $this->load('meta');
+            }
+
+            return $this->getRelation('meta')?->{$attribute};
         }, $this->getDefaultMetaAttribute($attribute));
+    }
+
+    /**
+     * Get dotted attribute.
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    public function getDottedAttribute($key)
+    {
+        if (! Str::contains($key, '.')) {
+            return $this->getAttribute($key);
+        }
+
+        $keys = explode('.', $key);
+        $value = $this->getAttribute(array_shift($keys));
+
+        foreach ($keys as $key) {
+            if (! $value) {
+                return;
+            }
+
+            $value = $value->{$key};
+        }
+
+        return $value;
     }
 
     /**

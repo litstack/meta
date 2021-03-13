@@ -2,7 +2,9 @@
 
 namespace Litstack\Meta\Components;
 
+use Ignite\Crud\Models\LitFormModel;
 use Ignite\Crud\Models\Media;
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 use Litstack\Meta\Metaable;
 
@@ -11,7 +13,7 @@ class MetaComponent extends Component
     /**
      * Metaable instance.
      */
-    public Metaable $meta;
+    public Metaable | LitFormModel $meta;
 
     /**
      * Create new MetaComponent instance.
@@ -19,7 +21,7 @@ class MetaComponent extends Component
      * @param Metaable $meta
      */
     public function __construct(
-        Metaable $for,
+        Metaable | LitFormModel $for,
         public ?string $title = null,
         public ?string $author = null,
         public ?string $description = null,
@@ -28,20 +30,33 @@ class MetaComponent extends Component
     ) {
         $this->meta = $for;
 
-        if (\is_null($this->title)) {
-            $this->title = $this->meta->metaTitle();
+        $this->setMetaAttribute('title');
+        $this->setMetaAttribute('author');
+        $this->setMetaAttribute('description');
+        $this->setMetaAttribute('keywords');
+        $this->setMetaAttribute('image');
+    }
+
+    /**
+     * Set meta attribute.
+     *
+     * @param  string $attribute
+     * @return void
+     */
+    protected function setMetaAttribute($attribute)
+    {
+        if (! \is_null($this->{$attribute})) {
+            return;
         }
-        if (\is_null($this->author)) {
-            $this->author = $this->meta->metaTitle();
-        }
-        if (\is_null($this->description)) {
-            $this->title = $this->meta->metaDescription();
-        }
-        if (\is_null($this->keywords)) {
-            $this->title = $this->meta->metaKeywords();
-        }
-        if (\is_null($this->image)) {
-            $this->title = $this->meta->metaImage();
+
+        $method = 'meta'.ucfirst(Str::camel($attribute));
+
+        if ($this->meta instanceof Metaable) {
+            $this->{$attribute} = $this->meta->{$method}();
+        } else {
+            $this->{$attribute} = $this->meta
+                ->config()
+                ->{$method}($this->meta);
         }
     }
 

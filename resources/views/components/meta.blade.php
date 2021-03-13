@@ -1,3 +1,4 @@
+
 @isset($title)
     <meta name="title" content="{{ $title }}"/>
 @endisset
@@ -8,11 +9,9 @@
 @isset($author)<meta name="author" content="{{ $author }}">@endisset
 <meta name="url" content="{{ url()->current() }}">
 
-@isset($image)
-    @if ($image->first())
-        <meta name="og:image" content="{{ $image->getFullUrl() }}"/>
-    @endif
-@endisset
+@if ($image instanceof Ignite\Crud\Models\Media)
+    <meta name="og:image" content="{{ $image->getFullUrl() }}"/>
+@endif
 
 @isset($title)<meta property="og:title" content="{{ $title }}"/>@endisset
 @isset($description)<meta property="og:description" content="{{ $description }}"/>@endisset

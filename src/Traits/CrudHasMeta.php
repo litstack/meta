@@ -2,13 +2,24 @@
 
 namespace Litstack\Meta\Traits;
 
+use Closure;
 use Ignite\Crud\Config\CrudConfig;
 use Ignite\Crud\CrudShow;
 use Ignite\Crud\CrudUpdate;
+use Ignite\Crud\Models\LitFormModel;
+use Ignite\Page\Wrapper\CardWrapperComponent;
+use Litstack\Meta\Metaable;
 use Litstack\Meta\Models\Meta;
 
 trait CrudHasMeta
 {
+    /**
+     * Apply meta form to page.
+     *
+     * @param  CrudShow|CrudUpdate  $page
+     * @param  array                $disable
+     * @return CardWrapperComponent
+     */
     protected function meta(CrudShow | CrudUpdate $page, array $disable = [])
     {
         $page->card(function ($form) use ($disable) {
@@ -39,5 +50,140 @@ trait CrudHasMeta
                     $form->component('lit-meta');
                 });
         });
+    }
+
+    /**
+     * Get meta title.
+     *
+     * @param  Metaable|LitFormModel $model
+     * @return null|string
+     */
+    public function metaTitle(Metaable | LitFormModel $model)
+    {
+        if ($model instanceof Metaable) {
+            return $model->metaTitle();
+        } else {
+            return $this->getMetaAttribute($model, 'title');
+        }
+    }
+
+    /**
+     * Get meta author.
+     *
+     * @param  Metaable|LitFormModel $model
+     * @return null|string
+     */
+    public function metaAuthor(Metaable | LitFormModel $model)
+    {
+        if ($model instanceof Metaable) {
+            return $model->metaAuthor();
+        } else {
+            return $this->getMetaAttribute($model, 'author');
+        }
+    }
+
+    /**
+     * Get meta description.
+     *
+     * @param  Metaable|LitFormModel $model
+     * @return null|string
+     */
+    public function metaDescription(Metaable | LitFormModel $model)
+    {
+        if ($model instanceof Metaable) {
+            return $model->metaDescription();
+        } else {
+            return $this->getMetaAttribute($model, 'description');
+        }
+    }
+
+    /**
+     * Get meta keywords.
+     *
+     * @param  Metaable|LitFormModel $model
+     * @return null|string
+     */
+    public function metaKeywords(Metaable | LitFormModel $model)
+    {
+        if ($model instanceof Metaable) {
+            return $model->metaKeywords();
+        } else {
+            return $this->getMetaAttribute($model, 'keywords');
+        }
+    }
+
+    /**
+     * Get meta image.
+     *
+     * @param  Metaable|LitFormModel $model
+     * @return null|string
+     */
+    public function metaImage(Metaable | LitFormModel $model)
+    {
+        if ($model instanceof Metaable) {
+            return $model->metaImage();
+        } else {
+            return $this->getMetaAttribute($model, 'image');
+        }
+    }
+
+    /**
+     * Get meta relation.
+     *
+     * @param  Model $model
+     * @return mixed
+     */
+    public function getMetaRelation($model)
+    {
+        return $model->meta;
+    }
+
+    /**
+     * Get meta attribute.
+     *
+     * @param  string $attribute
+     * @return mixed
+     */
+    public function getMetaAttribute($model, $attribute)
+    {
+        return $this->getValueOrDefault(function () use ($model, $attribute) {
+            if (property_exists($this, 'metaAttributes')
+                && array_key_exists($attribute, $this->metaAttributes)) {
+                return $model->getAttribute($this->metaAttributes[$attribute]);
+            }
+
+            return $model->meta?->{$attribute};
+        }, $this->getDefaultMetaAttribute($model, $attribute));
+    }
+
+    /**
+     * Return value or default.
+     *
+     * @param  Closure $closure
+     * @param  mixed   $default
+     * @return mixed
+     */
+    protected function getValueOrDefault(Closure $closure, $default)
+    {
+        return $closure() ?: $default;
+    }
+
+    /**
+     * Get the default meta attribute.
+     *
+     * @param  string $attribute
+     * @return void
+     */
+    public function getDefaultMetaAttribute($model, $attribute)
+    {
+        if (property_exists($this, 'defaultMetaAttributes') &&
+            array_key_exists($attribute, $this->defaultMetaAttributes)) {
+            return $this->defaultMetaAttributes[$attribute];
+        }
+
+        $defaultMethod = 'defaultMeta'.ucfirst($attribute);
+        if (method_exists($this, $defaultMethod)) {
+            return $this->{$defaultMethod}($model);
+        }
     }
 }
