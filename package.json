@@ -1,6 +1,6 @@
 {
     "name": "litstack-meta",
-    "version": "0.1",
+    "version": "1.0.0",
     "description": "",
     "main": "resources/js/index.js",
     "scripts": {
@@ -17,6 +17,7 @@
     "license": "MIT",
     "devDependencies": {
         "laravel-mix": "^6.0.6",
+        "postcss": "^8.2.8",
         "sass-loader": "^11.0.1",
         "vue-loader": "^15.9.6",
         "vue-template-compiler": "^2.6.12"

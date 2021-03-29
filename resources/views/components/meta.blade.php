@@ -9,7 +9,7 @@
 @isset($author)<meta name="author" content="{{ $author }}">@endisset
 <meta name="url" content="{{ url()->current() }}">
 
-@if ($image instanceof Ignite\Crud\Models\Media)
+@if ($image instanceof Ignite\Crud\Models\Media && $image->getKey())
     <meta name="og:image" content="{{ $image->getFullUrl() }}"/>
 @endif
 

@@ -10,7 +10,7 @@ class CreateMetaTable extends Migration
     {
         Schema::create('meta', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->morphs('model');
+            $table->nullableMorphs('model');
             
             $table->timestamps();
         });
