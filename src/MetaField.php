@@ -2,16 +2,16 @@
 
 namespace Litstack\Meta;
 
-use Ignite\Crud\BaseField;
+use Ignite\Vue\Component;
 
-class MetaField extends BaseField
+class MetaField extends Component
 {
     /**
      * Vue component name.
      *
      * @var string
      */
-    protected $component = 'lit-meta';
+    protected $name = 'lit-meta';
 
     protected $filler;
 

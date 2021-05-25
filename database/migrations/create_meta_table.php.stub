@@ -11,17 +11,16 @@ class CreateMetaTable extends Migration
         Schema::create('meta', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->nullableMorphs('model');
+            $table->boolean('is_edited');
             
             $table->timestamps();
         });
         
         Schema::create('meta_translations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('meta_id');
-            $table->string('locale');
+            $table->translates('meta', 'meta_id');
 
             $table->string('title')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->text('keywords')->nullable();
         });
     }

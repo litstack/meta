@@ -38,6 +38,16 @@ class MetaComponent extends Component
     }
 
     /**
+     * Determines if meta image is given.
+     *
+     * @return bool
+     */
+    public function hasImage()
+    {
+        return $this->image instanceof Media && $this->image->getKey();
+    }
+
+    /**
      * Set meta attribute.
      *
      * @param  string $attribute

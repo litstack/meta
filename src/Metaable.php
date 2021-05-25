@@ -3,6 +3,7 @@
 namespace Litstack\Meta;
 
 use Ignite\Crud\Models\Media;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 interface Metaable
 {
@@ -40,4 +41,11 @@ interface Metaable
      * @return string|null
      */
     public function metaDescription(): ?string;
+
+    /**
+     * `meta` relation.
+     *
+     * @return MorphOne
+     */
+    public function meta(): MorphOne;
 }

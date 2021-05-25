@@ -3,6 +3,8 @@
 namespace Litstack\Meta\Models\Translations;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Litstack\Meta\Models\Meta;
 
 class MetaTranslation extends Model
 {
@@ -23,4 +25,27 @@ class MetaTranslation extends Model
         'description',
         'keywords',
     ];
+
+    /**
+     * Meta relation.
+     *
+     * @return BelongsTo
+     */
+    public function meta(): BelongsTo
+    {
+        return $this->belongsTo(Meta::class);
+    }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+
+        foreach ($this->meta->translatedAttributes as $attribute) {
+            $array[$attribute] = $this->meta->metaAttribute(
+                $attribute, $array[$attribute] ?? null
+            );
+        }
+
+        return $array;
+    }
 }

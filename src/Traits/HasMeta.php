@@ -6,10 +6,21 @@ use Closure;
 use Ignite\Crud\Models\Media;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
+use Litstack\Meta\MetaObserver;
 use Litstack\Meta\Models\Meta;
 
 trait HasMeta
 {
+    /**
+     * Boot HasMeta trait.
+     *
+     * @return void
+     */
+    public static function bootHasMeta()
+    {
+        static::observe(MetaObserver::class);
+    }
+
     /**
      * `meta` relation.
      *
@@ -88,7 +99,13 @@ trait HasMeta
                 $this->load('meta');
             }
 
-            return $this->getRelation('meta')?->{$attribute};
+            $meta = $this->getRelation('meta');
+
+            if (! $meta?->is_edited) {
+                return;
+            }
+
+            return $meta->{$attribute};
         }, $this->getDefaultMetaAttribute($attribute));
     }
 

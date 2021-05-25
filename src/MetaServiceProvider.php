@@ -2,7 +2,8 @@
 
 namespace Litstack\Meta;
 
-use Ignite\Support\Facades\Form;
+use Ignite\Crud\Api\ApiRepositories;
+use Ignite\Crud\Form;
 use Ignite\Support\Facades\Lit;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -25,9 +26,16 @@ class MetaServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(RouteServiceProvider::class);
         $this->registerBladeComponents();
 
-        Form::field('map', MetaField::class);
+        $this->callAfterResolving('lit.form', function (Form $form) {
+            $form->field('seo', SeoField::class);
+            $form->field('social', SocialField::class);
+        });
+        $this->callAfterResolving(ApiRepositories::class, function (ApiRepositories $rep) {
+            $rep->register('meta', MetaRepository::class);
+        });
         Lit::script(__DIR__.'/../dist/index.js');
     }
 
@@ -49,6 +57,12 @@ class MetaServiceProvider extends ServiceProvider
         if (! class_exists('CreateMetaTable')) {
             $this->publishes([
                 __DIR__.'/../database/migrations/create_meta_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_meta_table.php'),
+            ], 'migrations');
+        }
+
+        if (! class_exists('CreateRedirectsTable')) {
+            $this->publishes([
+                __DIR__.'/../database/migrations/create_redirects_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_redirects_table.php'),
             ], 'migrations');
         }
     }
