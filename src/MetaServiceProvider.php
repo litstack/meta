@@ -2,9 +2,10 @@
 
 namespace Litstack\Meta;
 
-use Ignite\Crud\Api\ApiRepositories;
 use Ignite\Crud\Form;
+use Ignite\Foundation\Litstack;
 use Ignite\Support\Facades\Lit;
+use Ignite\Crud\Api\ApiRepositories;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,7 +37,9 @@ class MetaServiceProvider extends ServiceProvider
         $this->callAfterResolving(ApiRepositories::class, function (ApiRepositories $rep) {
             $rep->register('meta', MetaRepository::class);
         });
-        Lit::script(__DIR__.'/../dist/index.js');
+        $this->callAfterResolving('lit', function(Litstack $lit) {
+            $lit->script(__DIR__.'/../dist/index.js');
+        });
     }
 
     /**
@@ -46,6 +49,7 @@ class MetaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'meta');
 
         $this->publishes([
