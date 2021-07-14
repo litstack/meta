@@ -140,11 +140,10 @@ trait FormHasMeta
 
         $config = Config::get(static::class);
 
-        if (! $model->wasRecentlyCreated) {
-            return $model;
-        }
+        if ($meta = Meta::whereForm($model)->first()) {
+            $model->setAttribute('meta', $meta);
 
-        if (Meta::whereForm($model)->exists()) {
+            
             return $model;
         }
 
@@ -166,7 +165,8 @@ trait FormHasMeta
             ];
         }
 
-        Meta::create($attributes);
+        dd("s");
+        $model->setAttribute('meta', Meta::create($attributes));
 
         app()->setLocale($currentLocale);
 

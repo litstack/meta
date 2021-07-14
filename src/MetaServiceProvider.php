@@ -27,7 +27,6 @@ class MetaServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(RouteServiceProvider::class);
         $this->registerBladeComponents();
 
         $this->callAfterResolving('lit.form', function (Form $form) {
@@ -49,7 +48,6 @@ class MetaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'meta');
 
         $this->publishes([
@@ -61,12 +59,6 @@ class MetaServiceProvider extends ServiceProvider
         if (! class_exists('CreateMetaTable')) {
             $this->publishes([
                 __DIR__.'/../database/migrations/create_meta_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_meta_table.php'),
-            ], 'migrations');
-        }
-
-        if (! class_exists('CreateRedirectsTable')) {
-            $this->publishes([
-                __DIR__.'/../database/migrations/create_redirects_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_redirects_table.php'),
             ], 'migrations');
         }
     }

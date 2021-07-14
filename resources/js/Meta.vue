@@ -53,9 +53,9 @@
 
             <div v-if="showEdit" class="row">
                 <lit-field
-                    v-for="(field, index) in field.form.fields"
+                    v-for="(f, index) in field.form.fields"
                     :key="index"
-                    :field="field"
+                    :field="f"
                     :model-id="model.id"
                     :model="meta"
                     v-on="$listeners"
@@ -181,6 +181,10 @@ export default {
             }
 
             this.meta = this.crud(response.data);
+
+            delete this.meta.attributes.title;
+            delete this.meta.attributes.description;
+            delete this.meta.attributes.keywords;
 
             this.busy = false;
         },

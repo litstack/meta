@@ -130,6 +130,14 @@ class Meta extends Model implements TranslatableContract, HasMediaContract
         return $this->getMedia('image') ?: $this->metaAttribute('image', null);
     }
 
+    public static function forForm(LitFormModel $form)
+    {
+        return static::firstOrCreate([
+            'model_type' => get_class($form),
+            'model_id'   => $form->id
+        ]);
+    }
+
     /**
      * Get `title` attribute.
      *

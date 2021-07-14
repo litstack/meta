@@ -31,33 +31,18 @@ class Post extends Model implements Metaable
 }
 ```
 
-> Forms don't need further setup
-
 In order to display the form in litstack edit your model-config:
 
 ```php
-use Litstack\Meta\Traits\CrudHasMeta;
 
-class PostConfig extends CrudConfig
+public function show() 
 {
-    use CrudHasMeta;
-
-    // …
-
-    public function show(CrudShow $page)
-    {
-        $this->meta($page);
-    }
+    $page->card(function($form) {
+        $form->seo();
+    });
 }
-```
+        
 
-You may disable certain fields in the meta modal:
-
-```php
-$this->meta($page, disable: [
-    'description',
-    'keywords'
-]);
 ```
 
 To display the meta-fields in your template, simply use the `<x-lit-meta />` component and pass it the `metaFields` of your model.

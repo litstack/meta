@@ -11,7 +11,6 @@ use Ignite\Crud\Repositories\BaseFieldRepository;
 use Ignite\Crud\Requests\CrudReadRequest;
 use Ignite\Crud\Requests\CrudUpdateRequest;
 use Litstack\Meta\Models\Meta;
-use Litstack\Meta\Models\Redirect;
 use stdClass;
 
 class MetaRepository extends BaseFieldRepository
@@ -40,7 +39,7 @@ class MetaRepository extends BaseFieldRepository
         if ($model instanceof Metaable) {
             return $model->meta()->getResults() ?: $model->meta()->make();
         } else {
-            return Meta::whereForm($model)->first();
+            return Meta::forForm($model);
         }
     }
 
@@ -68,10 +67,9 @@ class MetaRepository extends BaseFieldRepository
     {
         $route = $this->field->route;
 
-        Redirect::create([
-            'old_url' => str_replace('{slug}', $model->slug, $route),
-            'new_url' => str_replace('{slug}', $payload->to, $route),
-            'status'  => 301,
+        app('redirect.model')->create([
+            'from_url' => str_replace('{slug}', $model->slug, $route),
+            'to_url' => str_replace('{slug}', $payload->to, $route),
         ]);
     }
 
