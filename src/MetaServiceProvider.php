@@ -26,9 +26,13 @@ class MetaServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerBladeComponents();
-
-        Form::field('map', MetaField::class);
-        Lit::script(__DIR__.'/../dist/index.js');
+        
+        $this->callAfterResolving('lit.form', function (Form $form) {
+            $form->field('map', MetaField::class);
+        });
+        $this->callAfterResolving('lit', function ($lit) {
+            $lit->script(__DIR__.'/../dist/index.js');
+        });
     }
 
     /**
