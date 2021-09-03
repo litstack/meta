@@ -143,7 +143,6 @@ trait FormHasMeta
         if ($meta = Meta::whereForm($model)->first()) {
             $model->setAttribute('meta', $meta);
 
-            
             return $model;
         }
 
@@ -165,7 +164,6 @@ trait FormHasMeta
             ];
         }
 
-        dd("s");
         $model->setAttribute('meta', Meta::create($attributes));
 
         app()->setLocale($currentLocale);
