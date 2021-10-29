@@ -12,6 +12,25 @@ class MetaObserver
      */
     public function created(Metaable $metaable)
     {
+        $this->createMeta($metaable);
+    }
+
+    /**
+     * Handle the Metaable "retrieved" event.
+     *
+     * @param Metaable $metaable
+     * @return void
+     */
+    public function retrieved(Metaable $metaable)
+    {
+        if ($metaable->meta()->exists()) {
+            return;
+        }
+        $this->createMeta($metaable);
+    }
+
+    public function createMeta(Metaable $metaable)
+    {
         $currentLocale = app()->getLocale();
         $locales = config('translatable.locales') ?: [app()->getLocale()];
 
