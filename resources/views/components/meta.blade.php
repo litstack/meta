@@ -1,6 +1,9 @@
 
 {{-- Default --}}
 {{-- <link rel="canonical" href="{{ route('home') }}"/> --}}
+
+@isset($title)<title>{{ $title }}</title>>@endisset
+
 <meta name="robots" content="index,follow"/> 
 <meta name="revisit-after" content="7 days">
 <meta name="url" content="{{ url()->current() }}">
